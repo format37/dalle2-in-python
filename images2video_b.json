@@ -1,0 +1,7 @@
+{
+    "images_path": "extracted_from_video/",
+    "ascending_sorting_order": "1",
+    "scaling_size": "900",
+    "fps": "24",
+    "output_file_name": "video_hi_fps.avi"
+}

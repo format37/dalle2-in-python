@@ -1,56 +1,65 @@
 import cv2
 import os
+import json
 import sys
 
 
 def main():
-    # path = './image_sequence/'
-    # read path from first parameter
-    path = sys.argv[1]
-    # if path is not exist, warn and exit
-    if not os.path.exists(path):
-        print('Path does not exist!')
+    # if no parameters has been passed, print help
+    if len(sys.argv) < 2:
+        print('Usage: python3 images2video.py <config_file>')
+        print('Example a: python3 images2video.py images2video_a.json')
+        print('Example b: python3 images2video.py images2video_b.json')
         exit()
+
+    # Parameters
+    with open(sys.argv[1], 'r') as f:
+        config = json.load(f)
+    
+    images_path = config['images_path']
+    # if path is not exist, warn and exit
+    if not os.path.exists(images_path):
+        print('Images path is not exist!')
+        exit()
+
+    ascending_sorting_order = int(config['ascending_sorting_order'])
+    scaling_size = int(config['scaling_size'])
+
     # read all files in path
     filenames = []
-    for fname in os.listdir(path):
-        filenames.append(os.path.join(path, fname))
-    # sort filenames by name descending
-    # filenames = sorted(filenames, key=lambda x: x.split('/')[-1], reverse=True)
-    # sort filenames by name ascending
-    filenames = sorted(filenames)
-    # append reversed filenames to list
-    #for f in sorted(filenames, key=lambda x: x.split('/')[-1], reverse=True):
-    #    filenames.append(f)
+    for fname in os.listdir(images_path):
+        filenames.append(os.path.join(images_path, fname))
+    if ascending_sorting_order:
+        # sort filenames by name ascending
+        filenames = sorted(filenames)
+    else:
+        # sort filenames by name descending
+        filenames = sorted(filenames, key=lambda x: x.split('/')[-1], reverse=True)
+
     # read images
     images = []
     for fname in filenames:
-        #images.append(cv2.imread(fname))
         # read image
         img = cv2.imread(fname)
-        # downgrade image size to 900x900
-        img = cv2.resize(img, (900, 900))
+        # compare sizes
+        if scaling_size != img.shape[0]:
+            # resize image
+            img = cv2.resize(img, (scaling_size, scaling_size))
+            # resize image
+            img = cv2.resize(img, (scaling_size, scaling_size))
         # add image to list
         images.append(img)
-    # read framerate from cmd params
-    fps = int(input('Enter framerate: '))
+
+    fps = int(config['fps'])
+
     # create a video
     height, width, layers = images[0].shape
     fourcc = cv2.VideoWriter_fourcc(*'XVID')
-    video = cv2.VideoWriter('./video.avi', fourcc, fps, (width, height))
+    video = cv2.VideoWriter(config['output_file_name'], fourcc, fps, (width, height))
     for image in images:
         video.write(image)
     cv2.destroyAllWindows()
     video.release()
-    """# create a gif animation
-    gif_name = 'animation.gif'
-    frame = images[0]
-    height, width, layers = frame.shape
-    video = cv2.VideoWriter(gif_name, 0, frameRate, (width, height))
-    for image in images:
-        video.write(image)
-    cv2.destroyAllWindows()
-    video.release()"""
 
 
 if __name__ == '__main__':

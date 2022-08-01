@@ -1,0 +1,14 @@
+{
+    "frame_number": "8",
+    "frame_sub": "3",
+    "generations_count_limit": "2",
+    "prompt_appendix": " Drip painting",
+    "prompt_path": "prompt_images/",
+    "generations_path": "generations/",
+    "frames_path": "image_sequence/",
+    "size_step": "0.25",
+    "angle_step": "5",
+    "frame_sub_limit": "4",
+    "text_path": "bird_e.txt",
+    "generate_prompt_and_exit": "0"
+}

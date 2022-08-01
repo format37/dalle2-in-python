@@ -1,0 +1,7 @@
+{
+    "images_path": "image_sequence/",
+    "ascending_sorting_order": "0",
+    "scaling_size": "900",
+    "fps": "24",
+    "output_file_name": "video_low_fps.avi"
+}
